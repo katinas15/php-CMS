@@ -18,7 +18,41 @@
         $post_content = $row['post_content'];
 
     }
+
+    if(isset($_POST['update_post'])){
+        $post_author = $_POST['author'];
+        $post_title = $_POST['title'];
+        $post_category_id = $_POST['post_category'];
+        $post_status = $_POST['post_status'];
+        $post_image = $_FILES['image']['name'];
+        $post_image_temp = $_FILES['image']['name'];
+
+        $post_content = $_POST['post_content'];
+        $post_tags = $_POST['post_tags'];
+
+        $target_dir = "/Applications/XAMPP/xamppfiles/htdocs/admin/images/";
+
+        move_uploaded_file($post_image_temp, $target_dir . $post_image);
+
+
+        if(empty($post_image)){
+            $query = "select * from posts where post_id = $the_post_id";
+            $select_image = mysqli_query($connection, $query);
+
+            while($row = mysqli_fetch_array($select_iamge)){
+                $post_image = $row['post_image']; 
+            }
+        }
+
+        $query = "update posts set post_category_id = '{$post_category_id}', post_title = '{$post_title}', post_author  = '{$post_author}', post_date = now(), post_image  = '{$post_image}', post_content  = '{$post_content}', post_tags = '{$post_tags}', post_status = '{$post_status}' where post_id = '{$the_post_id}' ";
+    
+        $update_post = mysqli_query($connection, $query);
+
+        confirm_query($update_post);
+    }
+
 ?>
+
 
 
 
@@ -30,8 +64,25 @@
     </div>
 
     <div class="form-group">
-        <label for="post_category">Post category id</label>
-        <input value="<?php echo $post_category_id; ?>" type="text" class="form-control" name="post_category_id">
+        <select name="post_category" id="">
+
+
+        <?php 
+            $query = "select * from category";
+            $select_categories = mysqli_query($connection, $query);
+            confirm_query($select_categories);
+
+            while($row = mysqli_fetch_assoc($select_categories)){
+                $cat_id = $row['cat_id'];
+                $cat_title = $row['cat_title'];
+                echo "<option value=' {$cat_id} '> {$cat_title} </option>";
+            }
+ 
+            ?> 
+
+        </select>
+
+
     </div>
 
     <div class="form-group">
@@ -45,7 +96,7 @@
     </div>
 
     <div class="form-group">
-        <label for="post_image">Post image</label>
+        <img  witdth="100" src="../images/<?php echo  $post_image; ?>">
         <input type="file" name="image">
     </div>
 
@@ -62,8 +113,7 @@
     </div>
 
     <div class="form-group">
-        <input class="btn btn-primary" type="submit" name="create_post" value="Publish" >
+        <input class="btn btn-primary" type="submit" name="update_post" value="Publish" >
     </div>
-
 
 </form>
