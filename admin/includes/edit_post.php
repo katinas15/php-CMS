@@ -39,7 +39,7 @@
             $query = "select * from posts where post_id = $the_post_id";
             $select_image = mysqli_query($connection, $query);
 
-            while($row = mysqli_fetch_array($select_iamge)){
+            while($row = mysqli_fetch_array($select_image)){
                 $post_image = $row['post_image']; 
             }
         }
