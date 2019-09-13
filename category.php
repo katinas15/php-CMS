@@ -10,8 +10,14 @@
             <!-- Blog Entries Column -->
             <div class="col-md-8">
                 <?php
+                
+                if(isset($_GET['category'])){
+                    $post_category_id = $_GET['category'];
+                }
 
-                    $query = "select * from posts";
+
+
+                    $query = "select * from posts where post_category_id = $post_category_id";
                     $all_posts = mysqli_query($connection, $query);
 
                     while($row = mysqli_fetch_assoc($all_posts)){
